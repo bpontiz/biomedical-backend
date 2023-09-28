@@ -1,11 +1,13 @@
-export const persistedUserMock = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.persistedUsersMock = exports.persistedUserMock = void 0;
+exports.persistedUserMock = {
     id: 109801283013,
     name: 'Peter Pettigrew',
     email: 'peter@example.com',
     password: '1234321',
 };
-
-export const persistedUsersMock = [
+exports.persistedUsersMock = [
     {
         id: 109801283013,
         name: 'Peter Pettigrew',
