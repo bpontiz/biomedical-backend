@@ -1,26 +1,26 @@
 import { ForPersistingUser, User } from "../../ports/drivers/for-persisting-user";
-import { User as PersistedUser, persistedUserMock, persistedUsersMock } from "../../app";
+import { User as PersistedUser, RepositoryUser } from "../../app";
 
 export class ApiPersister implements ForPersistingUser {
     constructor() {}
 
-    getUser(_email: string): Promise<PersistedUser | null> {
-        return Promise.resolve(persistedUserMock)
+    getUser(email: string): Promise<PersistedUser | null> {
+        return Promise.resolve(new RepositoryUser().getUser(email));
     }
 
     getUsers(): Promise<PersistedUser[] | []> {
-        return Promise.resolve(persistedUsersMock)
+        return Promise.resolve(new RepositoryUser().getUsers());
     }
 
-    createUser(_user: User): Promise<PersistedUser | null> {
-        return Promise.resolve(persistedUserMock)
+    createUser(user: User): Promise<PersistedUser | null> {
+        return Promise.resolve(new RepositoryUser().createUser(user));
     }
 
-    updateUser(_email: string, _user: User): Promise<PersistedUser | null> {
-        return Promise.resolve(persistedUserMock)
+    updateUser(email: string, user: User): Promise<PersistedUser | null> {
+        return Promise.resolve(new RepositoryUser().updateUser(email, user));
     }
 
-    deleteUser(_email: string): Promise<PersistedUser | null> {
-        return Promise.resolve(persistedUserMock)
+    deleteUser(email: string): Promise<PersistedUser | null> {
+        return Promise.resolve(new RepositoryUser().deleteUser(email));
     }
 }

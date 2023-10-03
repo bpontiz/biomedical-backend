@@ -11,6 +11,6 @@ export class UserModel {
     @Column({length: 50, unique: true})
     email: string = '';
 
-    @Column()
+    @Column({length: 100})
     password: string = '';
 }

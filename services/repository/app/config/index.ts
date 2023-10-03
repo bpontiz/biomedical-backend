@@ -10,7 +10,7 @@ const connection = async (): Promise<DataSource> => {
         port: Number(process.env.DB_PORT) || 3306,
         username: process.env.DB_USERNAME || "root",
         password: process.env.DB_PASSWORD || "admin",
-        database: process.env.DB_DATABASE || "test",
+        database: process.env.DB_DATABASE || "biomed",
         entities: [UserModel],
         synchronize: true,
         logging: false,

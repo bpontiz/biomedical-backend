@@ -9,12 +9,12 @@ export class RepositoryUser implements ApiPersister {
     async getUser(email: string): Promise<PersistedUser | null> {
         try {
             let service = await connectionConfig;
-            const UserDb = await service.getRepository(UserModel);
+            const UserDb = await service.getRepository(UserModel).findOneBy({email: email});
 
-            return await UserDb.findOneBy({email: email});
+            return UserDb;
         }
-        catch {
-            console.log(`Could not find user with email: ${email}.`);
+        catch (err) {
+            console.log(`Could not find user with email: ${email}\n${err}.`);
 
             return null;
         }
@@ -23,9 +23,9 @@ export class RepositoryUser implements ApiPersister {
     async getUsers(): Promise<PersistedUser[] | []> {
         try {
             let service = await connectionConfig;
-            const UserDb = await service.getRepository(UserModel);
-            
-            return await UserDb.find();
+            const UserDb = await service.getRepository(UserModel).find();
+
+            return UserDb;
         }
         catch (err) {
             console.log(`Could not find users.`, err);
@@ -39,9 +39,9 @@ export class RepositoryUser implements ApiPersister {
             const userExistance = await this.getUser(user.email);
             if (!userExistance) {
                 let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel);
+                const UserDb = await service.getRepository(UserModel).save(user);
 
-                return await UserDb.save(user);
+                return UserDb;
             };
 
             console.log(`User ${user.email} already exists on user database.`);
@@ -60,10 +60,13 @@ export class RepositoryUser implements ApiPersister {
             const userExistance = await this.getUser(email);
             if (userExistance) {
                 let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel);
-                const newUser = {...userExistance, user};
+                const newUser = {
+                    id: userExistance.id,
+                    ...user
+                };
+                const UserDb = await service.getRepository(UserModel).save(newUser);
 
-                return await UserDb.save(newUser);
+                return UserDb;
             };
 
             console.log(`User ${email} does not exist on user database so it cannot be updated.`);
@@ -79,12 +82,12 @@ export class RepositoryUser implements ApiPersister {
 
     async deleteUser(email: string): Promise<PersistedUser | null> {
         try {
-            const userExistance = await this.getUser(email);
-            if (userExistance) {
+            const userToBeDeleted = await this.getUser(email);
+            if (userToBeDeleted) {
                 let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel);
+                const UserDb = await service.getRepository(UserModel).remove(userToBeDeleted);
 
-                return await UserDb.remove(userExistance);
+                return UserDb;
             };
 
             console.log(`User ${email} does not exist on user database so it cannot be deleted.`);
