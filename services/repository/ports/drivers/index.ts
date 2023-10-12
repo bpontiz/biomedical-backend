@@ -1,1 +1,1 @@
-export * from './for-persisting-user';
+export * from './for-persisting';

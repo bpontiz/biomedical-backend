@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { UserModel } from '../model/user/user';
+import { UserModel } from '../model/user';
 import 'dotenv/config';
+import { ProductModel } from '../model/product';
 
 const connection = async (): Promise<DataSource> => {
     const AppDataSource = new DataSource({
@@ -11,14 +12,14 @@ const connection = async (): Promise<DataSource> => {
         username: process.env.DB_USERNAME || "root",
         password: process.env.DB_PASSWORD || "admin",
         database: process.env.DB_DATABASE || "biomed",
-        entities: [UserModel],
+        entities: [UserModel, ProductModel],
         synchronize: true,
         logging: false,
     });
 
     try {
         await AppDataSource.initialize();
-        console.log('User DB CONNECTED!');
+        console.log('LOCAL DATABASE CONNECTED!');
 
         return AppDataSource;
     }
