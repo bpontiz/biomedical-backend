@@ -19,6 +19,18 @@ app.get('/user', (_, res) => {
     
 });
 
+app.post('/', (req, res) => {
+    const user = req.body;
+    Promise.resolve(new ApiPersister().createUser(user))
+        .then(u => res.send(u));
+})
+
+app.put('/', (req, res) => {
+    const user = req.body;
+    Promise.resolve(new ApiPersister().updateUser(user.email, user))
+        .then(u => res.send(u))
+});
+
 const URL = `http://localhost:${PORT}`;
 
 app.listen(PORT, () => {

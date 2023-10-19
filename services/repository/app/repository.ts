@@ -6,6 +6,7 @@ import { UserModel } from "./model/user";
 import { ProductModel } from "./model/product";
 import { Product as PersistedProduct } from "./schemas/product";
 import { Product } from "../../api/app/schemas";
+import bcrypt from 'bcrypt';
 
 export class Repository implements ApiPersister {
     constructor() {}
@@ -41,8 +42,12 @@ export class Repository implements ApiPersister {
         try {
             const userExistance = await this.getUser(user.email);
             if (!userExistance) {
+                const usersPasswordHashed = {
+                    ...user,
+                    password: await this.encrypt(user.password)
+                };
                 let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel).save(user);
+                const UserDb = await service.getRepository(UserModel).save(usersPasswordHashed);
 
                 return UserDb;
             };
@@ -192,5 +197,12 @@ export class Repository implements ApiPersister {
 
             return null;
         }
+    };
+
+    async encrypt(passwordToBeHashed: string): Promise<string> {
+        const saltRounds: number = 10;
+        const hashing = await bcrypt.hash(passwordToBeHashed, saltRounds);
+
+        return hashing;
     };
 };

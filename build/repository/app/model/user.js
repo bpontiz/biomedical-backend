@@ -11,12 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const typeorm_1 = require("typeorm");
-let UserModel = exports.UserModel = class UserModel {
+let UserModel = class UserModel {
     id = 0;
     name = '';
     email = '';
     password = '';
 };
+exports.UserModel = UserModel;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
