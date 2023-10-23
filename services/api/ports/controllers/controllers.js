@@ -21,9 +21,18 @@ users: (req, res) => {
     res.send('Users is working from controllers');
 },
 
-profile: (req, res) => {
+login: (req, res) => {
+    res.send('Login is here!')
+},
+
+register: (req, res) => {
+    res.send('Register is here!')
+},
+
+operators: (req, res) => {
     res.send('Profile is working');
 },
+
 };
 
 module.exports = controller;
