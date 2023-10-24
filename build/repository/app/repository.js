@@ -1,9 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Repository = void 0;
 const config_1 = require("./config");
 const user_1 = require("./model/user");
 const product_1 = require("./model/product");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class Repository {
     constructor() { }
     async getUser(email) {
@@ -34,8 +38,12 @@ class Repository {
         try {
             const userExistance = await this.getUser(user.email);
             if (!userExistance) {
+                const usersPasswordHashed = {
+                    ...user,
+                    password: await this.encrypt(user.password)
+                };
                 let service = await config_1.connectionConfig;
-                const UserDb = await service.getRepository(user_1.UserModel).save(user);
+                const UserDb = await service.getRepository(user_1.UserModel).save(usersPasswordHashed);
                 return UserDb;
             }
             ;
@@ -163,6 +171,12 @@ class Repository {
             console.log(`Could not delete product ${name}.`, err);
             return null;
         }
+    }
+    ;
+    async encrypt(passwordToBeHashed) {
+        const saltRounds = 10;
+        const hashing = await bcrypt_1.default.hash(passwordToBeHashed, saltRounds);
+        return hashing;
     }
     ;
 }
