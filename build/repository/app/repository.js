@@ -14,7 +14,13 @@ class Repository {
         try {
             let service = await config_1.connectionConfig;
             const UserDb = await service.getRepository(user_1.UserModel).findOneBy({ email: email });
-            return UserDb;
+            if (UserDb) {
+                return UserDb;
+            }
+            else {
+                console.log(`Could not find user with email: ${email}`);
+                return null;
+            }
         }
         catch (err) {
             console.log(`Could not find user with email: ${email}\n${err}.`);
@@ -47,7 +53,7 @@ class Repository {
                 return UserDb;
             }
             ;
-            console.log(`User ${user.email} already exists on user database.`);
+            console.log(`User email ${user.email} already exists on user database.`);
             return null;
         }
         catch (err) {
@@ -69,7 +75,7 @@ class Repository {
                 return UserDb;
             }
             ;
-            console.log(`User ${email} does not exist on user database so it cannot be updated.`);
+            console.log(`User email ${email} does not exist on user database so it cannot be updated.`);
             return null;
         }
         catch (err) {
@@ -87,7 +93,7 @@ class Repository {
                 return UserDb;
             }
             ;
-            console.log(`User ${email} does not exist on user database so it cannot be deleted.`);
+            console.log(`User email ${email} does not exist on user database so it cannot be deleted.`);
             return null;
         }
         catch (err) {
@@ -97,10 +103,19 @@ class Repository {
     }
     ;
     async getProduct(name, id) {
+        console.log(name);
         try {
             let service = await config_1.connectionConfig;
-            const ProductDb = await service.getRepository(product_1.ProductModel).findOneBy({ name: name, id: id });
-            return ProductDb;
+            if (id) {
+                const ProductDb = await service.getRepository(product_1.ProductModel).findOneBy({ name: name, id: id });
+                !ProductDb ? console.log(`Could not find product with name: ${name} and id: ${id}`) : null;
+                return ProductDb;
+            }
+            else {
+                const ProductDb = await service.getRepository(product_1.ProductModel).findOneBy({ name: name });
+                !ProductDb ? console.log(`Could not find product with name: ${name}.`) : null;
+                return ProductDb;
+            }
         }
         catch (err) {
             console.log(`Could not find product with name: ${name}\n${err}.`);
@@ -122,8 +137,13 @@ class Repository {
     ;
     async createProduct(product) {
         try {
+            const generateTimeStamp = this.getTime();
+            const productWithTimeStamp = {
+                ...product,
+                timestamp: generateTimeStamp,
+            };
             let service = await config_1.connectionConfig;
-            const ProductDb = await service.getRepository(product_1.ProductModel).save(product);
+            const ProductDb = await service.getRepository(product_1.ProductModel).save(productWithTimeStamp);
             return ProductDb;
         }
         catch (err) {
@@ -177,6 +197,11 @@ class Repository {
         const saltRounds = 10;
         const hashing = await bcrypt_1.default.hash(passwordToBeHashed, saltRounds);
         return hashing;
+    }
+    ;
+    getTime() {
+        const getNow = new Date().toString();
+        return getNow;
     }
     ;
 }

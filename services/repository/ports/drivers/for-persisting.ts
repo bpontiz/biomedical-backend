@@ -15,9 +15,9 @@ export interface ForPersistingUser {
 }
 
 export interface ForPersistingProduct {
-    getProduct(name: string, id?: number): Promise<PersistedProduct | null>;
+    getProduct(id: number): Promise<PersistedProduct | null>;
     getProducts(): Promise<PersistedProduct[] | []>;
     createProduct(product: Product): Promise<PersistedProduct | null>;
-    updateProduct(name: string, id: number, product: Product): Promise<PersistedProduct | null>;
-    deleteProduct(name: string, id: number): Promise<PersistedProduct | null>;
+    updateProduct(id: number, product: Product): Promise<PersistedProduct | null>;
+    deleteProduct(id: number): Promise<PersistedProduct | null>;
 }

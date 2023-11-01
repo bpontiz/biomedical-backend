@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:type", String)
 ], ProductModel.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 25 }),
+    (0, typeorm_1.Column)({ length: 100 }),
     __metadata("design:type", String)
 ], ProductModel.prototype, "timestamp", void 0);
 exports.ProductModel = ProductModel = __decorate([

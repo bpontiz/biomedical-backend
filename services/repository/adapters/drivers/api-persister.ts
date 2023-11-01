@@ -25,8 +25,8 @@ export class ApiPersister implements ForPersistingUser, ForPersistingProduct {
         return Promise.resolve(new Repository().deleteUser(email));
     }
 
-    getProduct(name: string, id?: number): Promise<PersistedProduct | null> {
-        return Promise.resolve(new Repository().getProduct(name, id));
+    getProduct(id: number): Promise<PersistedProduct | null> {
+        return Promise.resolve(new Repository().getProduct(id));
     }
 
     getProducts(): Promise<PersistedProduct[] | []> {
@@ -37,11 +37,11 @@ export class ApiPersister implements ForPersistingUser, ForPersistingProduct {
         return Promise.resolve(new Repository().createProduct(product));
     }
 
-    updateProduct(name: string, id: number, product: Product): Promise<PersistedProduct | null> {
-        return Promise.resolve(new Repository().updateProduct(name, id, product));
+    updateProduct(id: number, product: Product): Promise<PersistedProduct | null> {
+        return Promise.resolve(new Repository().updateProduct(id, product));
     }
 
-    deleteProduct(name: string, id: number): Promise<PersistedProduct | null> {
-        return Promise.resolve(new Repository().deleteProduct(name, id));
+    deleteProduct(id: number): Promise<PersistedProduct | null> {
+        return Promise.resolve(new Repository().deleteProduct(id));
     }
 }

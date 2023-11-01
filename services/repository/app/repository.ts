@@ -14,8 +14,15 @@ export class Repository implements ApiPersister {
         try {
             let service = await connectionConfig;
             const UserDb = await service.getRepository(UserModel).findOneBy({email: email});
-
-            return UserDb;
+            if (UserDb)
+            {
+                return UserDb;   
+            }
+            else
+            {
+                console.log(`Could not find user with email: ${email}`);
+                return null;
+            }
         }
         catch (err) {
             console.log(`Could not find user with email: ${email}\n${err}.`);
@@ -52,7 +59,7 @@ export class Repository implements ApiPersister {
                 return UserDb;
             };
 
-            console.log(`User ${user.email} already exists on user database.`);
+            console.log(`User email ${user.email} already exists on user database.`);
             
             return null;
         }
@@ -77,7 +84,7 @@ export class Repository implements ApiPersister {
                 return UserDb;
             };
 
-            console.log(`User ${email} does not exist on user database so it cannot be updated.`);
+            console.log(`User email ${email} does not exist on user database so it cannot be updated.`);
 
             return null;
         }
@@ -98,7 +105,7 @@ export class Repository implements ApiPersister {
                 return UserDb;
             };
 
-            console.log(`User ${email} does not exist on user database so it cannot be deleted.`);
+            console.log(`User email ${email} does not exist on user database so it cannot be deleted.`);
 
             return null;
         }
@@ -109,15 +116,15 @@ export class Repository implements ApiPersister {
         }
     };
 
-    async getProduct(name: string, id?: number): Promise<PersistedProduct | null> {
+    async getProduct(id: number): Promise<PersistedProduct | null> {
         try {
             let service = await connectionConfig;
-            const ProductDb = await service.getRepository(ProductModel).findOneBy({name: name, id: id});
+            const productById = await service.getRepository(ProductModel).findOneBy({id: id});
 
-            return ProductDb;
+            return productById;
         }
         catch (err) {
-            console.log(`Could not find product with name: ${name}\n${err}.`);
+            console.log(`Could not find product with id: ${err}.`);
 
             return null;
         }
@@ -139,11 +146,15 @@ export class Repository implements ApiPersister {
 
     async createProduct(product: Product): Promise<PersistedProduct | null> {
         try {
+            const generateTimeStamp = this.getTime();
+            const productWithTimeStamp = {
+                ...product,
+                timestamp: generateTimeStamp,
+            };
             let service = await connectionConfig;
-            const ProductDb = await service.getRepository(ProductModel).save(product);
+            const ProductDb = await service.getRepository(ProductModel).save(productWithTimeStamp);
 
             return ProductDb;
-            
         }
         catch (err) {
             console.log(`Could not save product ${product.name}`, err);
@@ -152,12 +163,12 @@ export class Repository implements ApiPersister {
         }
     };
 
-    async updateProduct(name: string, id: number, product: Product): Promise<PersistedProduct | null> {
+    async updateProduct(id: number, product: Product): Promise<PersistedProduct | null> {
         try {
             let productExistance;
-            id ? productExistance = await this.getProduct(name, id) : productExistance = null;
+            let service = await connectionConfig;
+            id ? productExistance = await this.getProduct(id) : productExistance = null;
             if (productExistance) {
-                let service = await connectionConfig;
                 const updatedProduct = {
                     id: productExistance.id,
                     ...product
@@ -166,21 +177,20 @@ export class Repository implements ApiPersister {
 
                 return ProductDb;
             };
-
-            console.log(`Product ${name} does not exist on user database so it cannot be updated.`);
+            console.log(`Product with id ${id} does not exist on user database so it cannot be updated.`);
 
             return null;
         }
         catch (err) {
-            console.log(`Could not update product ${name}.`, err);
+            console.log(`Could not update product with id ${id}.`, err);
 
             return null;
         }
     };
 
-    async deleteProduct(name: string, id: number): Promise<PersistedProduct | null> {
+    async deleteProduct(id: number): Promise<PersistedProduct | null> {
         try {
-            const productToBeDeleted = await this.getProduct(name, id);
+            const productToBeDeleted = await this.getProduct(id);
             if (productToBeDeleted) {
                 let service = await connectionConfig;
                 const ProductDb = await service.getRepository(ProductModel).remove(productToBeDeleted);
@@ -188,12 +198,12 @@ export class Repository implements ApiPersister {
                 return ProductDb;
             };
 
-            console.log(`Product ${name} does not exist on user database so it cannot be deleted.`);
+            console.log(`Product with id ${id} does not exist on user database so it cannot be deleted.`);
 
             return null;
         }
         catch (err) {
-            console.log(`Could not delete product ${name}.`, err);
+            console.log(`Could not delete product with ${id}.`, err);
 
             return null;
         }
@@ -204,5 +214,11 @@ export class Repository implements ApiPersister {
         const hashing = await bcrypt.hash(passwordToBeHashed, saltRounds);
 
         return hashing;
+    };
+
+    getTime(): string {
+        const getNow = new Date().toString();
+
+        return getNow;
     };
 };

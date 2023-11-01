@@ -23,6 +23,6 @@ export class ProductModel {
     @Column({length: 1000})
     description: string = '';
 
-    @Column({length: 25})
+    @Column({length: 100})
     timestamp: string = '';
 }
