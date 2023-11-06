@@ -7,4 +7,3 @@ export * from './model/user';
 export * from './repository';
 export * from './schemas/product';
 export * from './schemas/user';
-export * from './server';
