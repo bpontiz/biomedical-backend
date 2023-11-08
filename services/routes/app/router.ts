@@ -35,12 +35,13 @@ export class Router implements RepositoryPersister {
         this.router = express.Router();
     }
 
-    async getAllProducts(): Promise<Product[] | null | IRouter> {
+    getAllProducts(): Promise<Product[] | null> {
         try{
-            this.router.get(routes.allproducts,(req,res) => {
-                const getAll = await new Apipersister().getProducts();
+            this.router.get(routes.allproducts, async (_,res) => {
+                const getAll = await new ApiPersister().getProducts();
                 res.status(200).json(getAll);
             })
+            return null;
         }
 
         catch(error){
