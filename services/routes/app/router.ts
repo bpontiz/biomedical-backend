@@ -36,7 +36,7 @@ export class Router implements RepositoryPersister {
         this.router = express.Router();
     }
 
-    getAllProducts(): Promise< Product[] | null > {
+    async getAllProducts(): Promise< Product[] | null > {
         try{
             this.router.get(routes.allproducts, async (_,res) => {
                 const getAll = await new ApiPersister().getAllProducts();
@@ -51,7 +51,7 @@ export class Router implements RepositoryPersister {
         }
     }
 
-    getOneProduct(id: number): Promise<Product | null> {
+    async getOneProduct(id: number): Promise<Product | null> {
         try{
             this.router.get(routes.oneproduct, async (_,res) => {
                 const getOne = await new ApiPersister().getOneProduct(id);
@@ -66,7 +66,51 @@ export class Router implements RepositoryPersister {
         }
     }
 
-    getAllUsers(): Promise<Users[] | null> {
+    async createProduct(id: number): Promise<Product | null> {
+        try{
+            this.router.post(routes.createproduct, async (_,res) => {
+                const newProduct = await new ApiPersister().createProductById(id);
+                res.status(201).json(newProduct)
+            })
+            return null;
+        } catch (error) {
+            console.log(`The product cannot be created in the route ${routes.createproduct}`, error);
+            return null
+        }
+    }
+
+    async deleteProduct(id: number): Promise<boolean> {
+        try{
+            const deleteProduct = await new ApiPersister().deleteProductById(id);
+            
+            this.router.delete(routes.deleteproduct, async (_,res) => {
+                if(deleteProduct){
+                    res.status(200).json({message: `product seccessfully deleted`});
+                } else {
+                    res.status(404).json({message:`product not found`})
+                }
+            });
+            return !!deleteProduct;
+        } catch (error) {
+            console.log(`The product could not be deleted from the route ${routes.deleteproduct}`, error)
+            return false;
+        }
+    }
+
+    async updateProduct(id: number, name: string, serie: string, status: string,  description: string): Promise<Product | null> {
+        try {
+            const updateProduct = await new ApiPersister().updateProductDetails(id, {name, serie, status, description});
+            this.router.put(routes.updateproduct, async(_,res) => {
+            res.status(200).json(updateProduct);
+            });
+            return updateProduct;
+        } catch (error) {
+            console.log(`Inable to update the product on the route ${routes.updateproduct}`, error);
+            return null;
+        }
+    }
+
+    async getAllUsers(): Promise<Users[] | null> {
         try{
             this.router.get(routes.allusers, async (_,res) => {
                 const getAll = await new ApiPersister().getAllUsers();
@@ -81,7 +125,7 @@ export class Router implements RepositoryPersister {
         }
     }
 
-    getOneUsers(id: number): Promise< Users | null > {
+    async getOneUsers(id: number): Promise< Users | null > {
         try{
             this.router.get(routes.oneusers, async (_,res) => {
                 const getOne = await new ApiPersister().getOneUsers(id);
@@ -92,6 +136,50 @@ export class Router implements RepositoryPersister {
         catch(error) {
             console.log(`One users could not be found ${routes.oneusers}`, error)
             return null
+        }
+    }
+
+    async createUser(id: number, name: string, surname: string, email: string, age: number): Promise< Users | null > {
+        try {
+            const newuser = await new ApiPersister().createUserWithDetails({id, name, surname, email, age});
+            this.router.post(routes.createuser, async (_,res) => {
+                res.status(201).json(newuser);
+            });
+
+            return newuser;
+        } catch (error) {
+            console.log(`The user could not be created in the path ${routes.createuser}`, error);
+            return null;
+        }
+    }
+
+    async updateUser(id: number, name:string, surname: string, email: string, age: string): Promise< Users | null > {
+        try {
+            const updatedUser = await new ApiPersister().createUserWithDetails({id, name, surname, email, age});
+            this.router.put(routes.updateuser, async (_,res) => {
+                res.status(200).json(updatedUser);
+            });
+            return updatedUser;
+        }catch (error) {
+            console.log(`Could not update user in path ${routes.updateuser}`, error);
+            return null;
+        }
+    }
+
+    async deleteUser(id: number): Promise<boolean> {
+        try {
+            const deletedUser = await new ApiPersister().deleteUserById(id);
+            this.router.delete(routes.deleteuser, async (_, res) => {
+                if (deletedUser) {
+                    res.status(200).json({ message: `User successfully deleted` });
+                } else {
+                    res.status(404).json({ message: `User not found` });
+                }
+            });
+            return !!deletedUser;
+        } catch (error) {
+            console.log(`The user could not be deleted from the route ${routes.deleteuser}`, error);
+            return false;
         }
     }
 }
