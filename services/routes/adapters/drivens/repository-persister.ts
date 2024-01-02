@@ -6,18 +6,18 @@ export class RepositoryPersister implements ForRepositoryPersisting {
     constructor() {}
 
     getAllProducts(): Promise<Product[] | null> {
-        return Promise.resolve( new Router().getAllProducts());
+        return Promise.resolve(this.Router().getAllProducts());
     };
 
     getOneProduct(id: number): Promise<Product | null> {
-        return Promise.resolve( new Router().getOneProduct(id));
+        return Promise.resolve(this.Router().getOneProduct(id));
     };
 
     getAllUsers(): Promise< Users[] | null > {
-        return Promise.resolve( new Router().getAllUsers());
+        return Promise.resolve(this.Router().getAllUsers());
     };
 
     getOneUsers(id: number): Promise< Users | null > {
-        return Promise.resolve( new Router().getOneUsers(id))
+        return Promise.resolve(this.Router().getOneUsers(id))
     }
 }

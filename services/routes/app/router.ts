@@ -1,6 +1,6 @@
 import { RepositoryPersister } from "../adapters/drivens/repository-persister";
 import { Product } from "./schema/product";
-import express, { IRouter } from 'express';
+import express from 'express';
 import { routes } from "./schema/routes";
 import { Users } from "./schema/user";
 
