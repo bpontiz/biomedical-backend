@@ -4,6 +4,7 @@ export interface Users {
     surname: string;
     rank: string; //For example... Operator || Admin
     email: string;
+    password: string;
     age: number;
     isActive: boolean;
     createdAt: Date;

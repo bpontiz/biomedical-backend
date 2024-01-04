@@ -1,23 +1,48 @@
-import { Users } from "../../app/schema/user";
+import { User } from "../../../repository/app/schemas/user";
 import { Product } from "../../app/schema/product";
 import { ForRepositoryPersisting } from "../../ports/drivens/for-repository-persisting";
+import { Router } from "../../app/router";
 
 export class RepositoryPersister implements ForRepositoryPersisting {
     constructor() {}
 
-    getAllProducts(): Promise<Product[] | null> {
-        return Promise.resolve(this.Router().getAllProducts());
+    getProducts(): Promise<Product[] | null> {
+        return Promise.resolve(new Router().getProducts());
     };
 
-    getOneProduct(id: number): Promise<Product | null> {
-        return Promise.resolve(this.Router().getOneProduct(id));
+    getProduct(id: number): Promise<Product | null> {
+        return Promise.resolve(new Router().getProduct(id));
     };
 
-    getAllUsers(): Promise< Users[] | null > {
-        return Promise.resolve(this.Router().getAllUsers());
+    createProduct(product: Product): Promise<Product | null> {
+        return Promise.resolve(new Router().createProduct(product));
     };
 
-    getOneUsers(id: number): Promise< Users | null > {
-        return Promise.resolve(this.Router().getOneUsers(id))
+    updateProduct(id: number, product: Product): Promise<Product | null> {
+        return Promise.resolve(new Router().updateProduct(id, product));
+    };
+
+    deleteProduct(id: number): Promise<Product | null> {
+        return Promise.resolve(new Router().deleteProduct(id));
+    };
+
+    getUsers(): Promise< User[] | null > {
+        return Promise.resolve(new Router().getUsers());
+    };
+
+    getUser(email: string): Promise<User | null> {
+        return Promise.resolve(new Router().getUser(email))
+    };
+
+    createUser(user: User): Promise<User | null> {
+        return Promise.resolve(new Router().createUser(user))
+    };
+
+    updateUser(email: string, user: User): Promise<User | null> {
+        return Promise.resolve(new Router().updateUser(email, user))
+    };
+
+    deleteUser(email: string): Promise<User | null> {
+        return Promise.resolve(new Router().deleteUser(email))
     }
 }
