@@ -1,6 +1,6 @@
 export const routes = {
     allUsers: `/users`,
-    oneUsers: `/users/:id`,
+    oneUser: `/users/:id`,
     createUser:`/users/:id/:name/:surname/:email/:age`,
     updateUser:`/users/:id/:name/:surname/:email/:age`,
     deleteUser:`/users/:id`,

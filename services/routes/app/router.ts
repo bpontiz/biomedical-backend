@@ -7,7 +7,7 @@ import { ApiPersister } from "../../repository/adapters/drivers";
 export class Router implements RepositoryPersister {
     constructor() {}
 
-    async getProducts(): Promise< Product[] | null > {
+    async getProducts(): Promise<Product[] | null> {
         try{
                 const getAll = await new ApiPersister().getProducts();
                 return getAll
@@ -73,7 +73,7 @@ export class Router implements RepositoryPersister {
                 const getOne = await new ApiPersister().getUser(email);
                 return getOne;
             } catch(error) {
-            console.log(`One users could not be found ${routes.oneUsers}`, error)
+            console.log(`One users could not be found ${routes.oneUser}`, error)
             return null
         }
     };
@@ -88,7 +88,7 @@ export class Router implements RepositoryPersister {
         }
     }
 
-    async updateUser(email: string, user: User): Promise< User | null > {
+    async updateUser(email: string, user: User): Promise<User | null> {
         try {
             const updatedUser = await new ApiPersister().updateUser(email, user);
             return updatedUser; 
