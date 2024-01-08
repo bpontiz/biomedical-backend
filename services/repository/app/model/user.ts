@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity({database: "noteapp"})
 export class UserModel {
     @PrimaryGeneratedColumn()
     id: number = 0;
@@ -13,4 +13,7 @@ export class UserModel {
 
     @Column({length: 100})
     password: string = '';
+
+    @Column()
+    permissions: string = '';
 }
