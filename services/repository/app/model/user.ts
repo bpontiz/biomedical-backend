@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-@Entity({database: "noteapp"})
+import 'dotenv/config';
+@Entity({database: process.env.DB_DATABASE})
 export class UserModel {
     @PrimaryGeneratedColumn()
     id: number = 0;
