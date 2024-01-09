@@ -1,4 +1,5 @@
 import express from 'express';
+import { connectionConfig } from './services/repository/app';
 
 const app = express();
 
@@ -9,6 +10,7 @@ const PORT = 8080;
 const URL = `http://localhost:${PORT}`;
 
 app.get('/', (_req,res) => {
+    connectionConfig;
     res.send('SERVER INITIALIZED! HELLO :D');
 });
 
