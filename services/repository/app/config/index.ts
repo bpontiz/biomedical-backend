@@ -11,14 +11,14 @@ const connection = async (): Promise<DataSource> => {
         port: Number(process.env.DB_PORT) || 3306,
         username: process.env.DB_USERNAME || "root",
         password: process.env.DB_PASSWORD || "admin",
-        synchronize: true,
+        synchronize: false,
         entities: [UserModel, ProductModel],
         logging: false,
     });
 
     try {
-        const makeConnection = await AppDataSource.initialize();
-        await makeConnection.query(`CREATE SCHEMA IF NOT EXISTS ${process.env.DB_DATABASE};`)
+        await AppDataSource.initialize();
+        await AppDataSource.query(`CREATE SCHEMA IF NOT EXISTS ${process.env.DB_DATABASE};`);
         console.log('LOCAL DATABASE CONNECTED!');
 
         return AppDataSource;
