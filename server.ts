@@ -3,6 +3,7 @@ import { routes } from './services/routes/app/schema/routes';
 import { Router } from './services/routes/app/router';
 import { Product } from './services/api/app/schemas/product';
 import { User } from './services/repository/app/schemas/user';
+import { connectionConfig } from './services/repository/app/config';
 
 const app = express();
 const router = new Router()
@@ -14,6 +15,7 @@ const PORT = 8080;
 const URL = `http://localhost:${PORT}`;
 
 app.get('/', (_req,res) => {
+    connectionConfig;
     res.send('SERVER INITIALIZED! HELLO :D');
 });
 
@@ -117,8 +119,8 @@ app.get(routes.oneUser, async (req, res) => {
 
 app.post(routes.createUser, async (req, res) => {
     try {
-        const { id, name, email, password } = req.body;
-        const newUser: User = {id, name, email, password};
+        const { id, name, email, password, permissions } = req.body;
+        const newUser: User = {id, name, email, password, permissions};
         const createdUser: User | null = await router.createUser(newUser);
         if (createdUser) {
             res.status(201).json(createdUser);
@@ -133,13 +135,14 @@ app.post(routes.createUser, async (req, res) => {
 app.put(routes.updateUser, async (req, res) => {
     try {
         const userEmail = req.params.email;
-        const {id, name, email, password } = req.body;
+        const {id, name, email, password, permissions } = req.body;
 
         const updatedUser: User = {
             id,
             name,
             email,
-            password
+            password,
+            permissions
         };
         const updated: User | null = await router.updateUser(userEmail, updatedUser)
 
