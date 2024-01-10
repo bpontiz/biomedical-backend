@@ -1,25 +1,11 @@
 import express from 'express';
-import { routes } from './services/routes/app/schema/routes';
-import { Router } from './services/routes/app/router';
-import { Product } from './services/api/app/schemas/product';
-import { User } from './services/repository/app/schemas/user';
-// import { connectionConfig } from './services/repository/app/config';
+import { routes } from '../../app/schema/routes';
+import { Router } from '../../app/router';
+import { Product } from '../../app/schema/product';
+import { User } from '../../../repository/app/schemas/user';
 
 const app = express();
-const router = new Router()
-
-app.use(express.json());
-
-const PORT = 8080;
-
-const URL = `http://localhost:${PORT}`;
-
-app.get('/', (_req,res) => {
-    // connectionConfig;
-    res.send('SERVER INITIALIZED! HELLO :D');
-});
-
-    //Products
+const router = new Router() 
 
 app.get(routes.allProducts, async (_req, res) => {
     const products = await router.getProducts();
@@ -88,20 +74,21 @@ app.delete(routes.deleteProduct, async (req, res) => {
     }
 });
 
-    //users
+// Users
 
 app.get(routes.allUsers, async(_req, res) => {
-        try {
-            const users: User[] | null = await router.getUsers();
-            if(users) {
-                res.json(users);
-            } else {
-                res.status(404).json({ error: 'Not found the users'})
-            }
-        } catch (error) {
-            res.status(500).json({ error: `Error in the application`})
+    try {
+        const users: User[] | null = await router.getUsers();
+        if(users) {
+            res.json(users);
+        } else {
+            res.status(404).json({ error: 'Not found the users'})
         }
+    } catch (error) {
+        res.status(500).json({ error: `Error in the application`})
+    }
 });
+
 
 app.get(routes.oneUser, async (req, res) => {
     try {
@@ -168,8 +155,4 @@ app.delete(routes.deleteUser, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: `Error in the application` })
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`✔ Server is running on ${URL}`);
 });

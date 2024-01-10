@@ -1,26 +1,26 @@
 import { RepositoryPersister } from "../adapters/drivens/repository-persister";
-import { Product } from "./schema/product";
+import { Product } from "../../repository/app/schemas/product";
 import { routes } from "./schema/routes";
 import { User } from "../../repository/app/schemas/user";
-import { ApiPersister } from "../../repository/adapters/drivers";
+import { NonPersistedProduct, NonPersistedUser } from "../ports/drivens/for-repository-persisting";
 
 export class Router implements RepositoryPersister {
     constructor() {}
 
-    async getProducts(): Promise<Product[] | null> {
+    async getProducts(): Promise<Product[] | []> {
         try{
-                const getAll = await new ApiPersister().getProducts();
+                const getAll = await new RepositoryPersister().getProducts();
                 return getAll
             } catch(error){
                 console.log(`Cannot get all products when requiring ${routes.allProducts} path`, error)
-                return null;
+                return [];
             }
         
     };
 
     async getProduct(id: number): Promise<Product | null> {
         try{
-                const getOne = await new ApiPersister().getProduct(id);
+                const getOne = await new RepositoryPersister().getProduct(id);
                 return getOne;
             } catch(error){
             console.log(`Cannot get the product whe you require ${routes.oneProduct} path`, error)
@@ -28,9 +28,9 @@ export class Router implements RepositoryPersister {
         }
     };
 
-    async createProduct(product: Product): Promise<Product | null> {
+    async createProduct(product: NonPersistedProduct): Promise<Product | null> {
         try{
-                const newProduct = await new ApiPersister().createProduct(product);
+                const newProduct = await new RepositoryPersister().createProduct(product);
                 return newProduct;
             } catch (error) {
             console.log(`The product cannot be created in the route ${routes.createProduct}`, error);
@@ -40,17 +40,17 @@ export class Router implements RepositoryPersister {
 
     async deleteProduct(id: number): Promise<Product | null> {
         try {
-            const deletedProduct = await new ApiPersister().deleteProduct(id);
+            const deletedProduct = await new RepositoryPersister().deleteProduct(id);
             return deletedProduct;
         } catch (error) {
             console.log(`The product could not be deleted ${routes.deleteProduct}`, error);
-            throw new Error('Product deletion failed');
+            return null;
         }
     };
 
     async updateProduct(id: number, product: Product): Promise<Product | null> {
         try {
-            const updateProduct = await new ApiPersister().updateProduct(id, product);
+            const updateProduct = await new RepositoryPersister().updateProduct(id, product);
             return updateProduct;
         } catch (error) {
             console.log(`Unable to update the product on the route ${routes.updateProduct}`, error);
@@ -58,19 +58,19 @@ export class Router implements RepositoryPersister {
         }
     };
 
-    async getUsers(): Promise<User[] | null> {
+    async getUsers(): Promise<User[] | []> {
         try{
-                const getAll = await new ApiPersister().getUsers();
+                const getAll = await new RepositoryPersister().getUsers();
                 return getAll;
             } catch(error) {
                 console.log(`All users could not be found ${routes.allUsers} path`, error)
-                return null;
+                return [];
             }
     };
 
     async getUser(email: string): Promise<User | null> {
         try{
-                const getOne = await new ApiPersister().getUser(email);
+                const getOne = await new RepositoryPersister().getUser(email);
                 return getOne;
             } catch(error) {
             console.log(`One users could not be found ${routes.oneUser}`, error)
@@ -78,9 +78,9 @@ export class Router implements RepositoryPersister {
         }
     };
 
-    async createUser(user: User): Promise<User | null>{
+    async createUser(user: NonPersistedUser): Promise<User | null>{
         try{
-            const createdUser = await new ApiPersister().createUser(user);
+            const createdUser = await new RepositoryPersister().createUser(user);
             return createdUser;
         } catch (error) {
             console.log(`User could not be created successfully in ${routes.createUser}`, error);
@@ -90,7 +90,7 @@ export class Router implements RepositoryPersister {
 
     async updateUser(email: string, user: User): Promise<User | null> {
         try {
-            const updatedUser = await new ApiPersister().updateUser(email, user);
+            const updatedUser = await new RepositoryPersister().updateUser(email, user);
             return updatedUser; 
         }catch (error) {
             console.log(`Could not update user in path ${routes.updateUser}`, error);
@@ -100,11 +100,11 @@ export class Router implements RepositoryPersister {
 
     async deleteUser(email: string): Promise<User | null> {
         try {
-            const deletedUser = await new ApiPersister().deleteUser(email);
+            const deletedUser = await new RepositoryPersister().deleteUser(email);
             return deletedUser;
         }catch(error) {
             console.log(`The user could not be deleted ${routes.deleteUser}`, error)
             return null
         }
     };
-}
+};

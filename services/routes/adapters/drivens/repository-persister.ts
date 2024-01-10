@@ -1,48 +1,48 @@
 import { User } from "../../../repository/app/schemas/user";
-import { Product } from "../../app/schema/product";
-import { ForRepositoryPersisting } from "../../ports/drivens/for-repository-persisting";
-import { Router } from "../../app/router";
+import { Product } from "../../../repository/app/schemas/product";
+import { ForRepositoryPersisting, NonPersistedProduct, NonPersistedUser } from "../../ports/drivens/for-repository-persisting";
+import { ApiPersister } from "../../../repository/adapters/drivers";
 
 export class RepositoryPersister implements ForRepositoryPersisting {
     constructor() {}
 
-    getProducts(): Promise<Product[] | null> {
-        return Promise.resolve(new Router().getProducts());
+    getProducts(): Promise<Product[] | []> {
+        return Promise.resolve(new ApiPersister().getProducts());
     };
 
     getProduct(id: number): Promise<Product | null> {
-        return Promise.resolve(new Router().getProduct(id));
+        return Promise.resolve(new ApiPersister().getProduct(id));
     };
 
-    createProduct(product: Product): Promise<Product | null> {
-        return Promise.resolve(new Router().createProduct(product));
+    createProduct(product: NonPersistedProduct): Promise<Product | null> {
+        return Promise.resolve(new ApiPersister().createProduct(product));
     };
 
     updateProduct(id: number, product: Product): Promise<Product | null> {
-        return Promise.resolve(new Router().updateProduct(id, product));
+        return Promise.resolve(new ApiPersister().updateProduct(id, product));
     };
 
     deleteProduct(id: number): Promise<Product | null> {
-        return Promise.resolve(new Router().deleteProduct(id));
+        return Promise.resolve(new ApiPersister().deleteProduct(id));
     };
 
-    getUsers(): Promise< User[] | null > {
-        return Promise.resolve(new Router().getUsers());
+    getUsers(): Promise< User[] | [] > {
+        return Promise.resolve(new ApiPersister().getUsers());
     };
 
     getUser(email: string): Promise<User | null> {
-        return Promise.resolve(new Router().getUser(email))
+        return Promise.resolve(new ApiPersister().getUser(email))
     };
 
-    createUser(user: User): Promise<User | null> {
-        return Promise.resolve(new Router().createUser(user))
+    createUser(user: NonPersistedUser): Promise<User | null> {
+        return Promise.resolve(new ApiPersister().createUser(user))
     };
 
     updateUser(email: string, user: User): Promise<User | null> {
-        return Promise.resolve(new Router().updateUser(email, user))
+        return Promise.resolve(new ApiPersister().updateUser(email, user))
     };
 
     deleteUser(email: string): Promise<User | null> {
-        return Promise.resolve(new Router().deleteUser(email))
+        return Promise.resolve(new ApiPersister().deleteUser(email))
     }
 }
