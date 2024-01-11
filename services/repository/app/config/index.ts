@@ -19,6 +19,7 @@ const connection = async (): Promise<DataSource> => {
     try {
         await AppDataSource.initialize();
         await AppDataSource.query(`CREATE SCHEMA IF NOT EXISTS ${process.env.DB_DATABASE};`);
+        await AppDataSource.synchronize();
         console.log('LOCAL DATABASE CONNECTED!');
 
         return AppDataSource;
