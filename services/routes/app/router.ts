@@ -7,6 +7,8 @@ import { NonPersistedProduct, NonPersistedUser } from "../ports/drivens/for-repo
 export class Router implements RepositoryPersister {
     constructor() {}
 
+    readonly allUsers = '/users';
+
     async getProducts(): Promise<Product[] | []> {
         try{
                 const getAll = await new RepositoryPersister().getProducts();
