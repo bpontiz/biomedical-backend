@@ -1,13 +1,11 @@
-import { Router as RouterHEX } from "../../app/router";
+// import { Router as RouterHEX } from "../../app/router";
+import { Router } from "../../app/router";
 import { ForRouting } from "../../ports/drivers/for-routing";
-import { Router, Router as RouterModule } from "express";
+import { Router as RouterModule } from "express";
 
 export class FrontRouter implements ForRouting {
-    appRouter = RouterModule();
-    routerInstance = new RouterHEX();
+    constructor(){};
 
-    getProducts(): Router {
-        return new FrontRouter().appRouter.get(this.routerInstance.allUsers, this.routerInstance.getUsers);
-    }
+    appRouter = RouterModule().get('/users', new Router().getUsers);
 
-}
+};
