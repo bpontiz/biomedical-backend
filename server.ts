@@ -1,5 +1,6 @@
 import express from 'express';
-import { connectionConfig } from './services/repository/app';
+import { FrontRouter } from './services/routes/adapters/drivers/front-router';
+// import { connectionConfig } from './services/repository/app/config';
 
 const app = express();
 
@@ -9,10 +10,7 @@ const PORT = 8080;
 
 const URL = `http://localhost:${PORT}`;
 
-app.get('/', (_req,res) => {
-    connectionConfig;
-    res.send('SERVER INITIALIZED! HELLO :D');
-});
+app.use('/', new FrontRouter().appRouter);
 
 app.listen(PORT, () => {
     console.log(`✔ Server is running on ${URL}`);
