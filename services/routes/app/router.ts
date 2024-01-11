@@ -3,6 +3,7 @@ import { Product } from "../../repository/app/schemas/product";
 import { routes } from "./schema/routes";
 import { User } from "../../repository/app/schemas/user";
 import { NonPersistedProduct, NonPersistedUser } from "../ports/drivens/for-repository-persisting";
+import { Request, Response } from "express";
 
 export class Router implements RepositoryPersister {
     constructor() {}
@@ -62,6 +63,7 @@ export class Router implements RepositoryPersister {
 
     async getUsers(): Promise<User[] | []> {
         try{
+                console.log("ENTRO AL CORAZON DE ROUTER HEX")
                 const getAll = await new RepositoryPersister().getUsers();
                 return getAll;
             } catch(error) {
@@ -109,4 +111,9 @@ export class Router implements RepositoryPersister {
             return null
         }
     };
+
+    async callGetUsers(_req: Request, res: Response): Promise<User[] | []> {
+        res.send(await this.getUsers());
+        return await this.getUsers();
+    }
 };

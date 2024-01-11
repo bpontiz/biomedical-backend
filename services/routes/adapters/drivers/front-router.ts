@@ -6,6 +6,8 @@ import { Router as RouterModule } from "express";
 export class FrontRouter implements ForRouting {
     constructor(){};
 
-    appRouter = RouterModule().get('/users', new Router().getUsers);
-
+    appRouter(): RouterModule {
+        const appRouterInstance = RouterModule();
+        return appRouterInstance.get('/users', new Router().getUsers);
+    }
 };
