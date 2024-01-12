@@ -1,4 +1,5 @@
 import express from 'express';
+import { FrontRouter } from './services/routes/adapters/drivers/front-router';
 
 const app = express();
 
