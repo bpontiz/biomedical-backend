@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import 'dotenv/config';
+import { Permissions } from "../schemas/user";
 @Entity({database: process.env.DB_DATABASE})
 export class UserModel {
     @PrimaryGeneratedColumn()
@@ -15,5 +16,5 @@ export class UserModel {
     password: string = '';
 
     @Column()
-    permissions: string = '';
+    permissions: Permissions = 'Operator';
 }

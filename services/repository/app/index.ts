@@ -1,5 +1,4 @@
 export * from './config';
-export * from './index';
 export * from './mocks/product';
 export * from './mocks/user';
 export * from './model/product';
