@@ -51,7 +51,7 @@ export class Repository implements ApiPersister {
             if (!userExistance) {
                 const usersPasswordHashed = {
                     ...user,
-                    password: await this.encrypt(user.password)
+                    password: await this.encrypt(user.password) 
                 };
                 let service = await connectionConfig;
                 const UserDb = await service.getRepository(UserModel).save(usersPasswordHashed);

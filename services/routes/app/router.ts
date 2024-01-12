@@ -1,21 +1,24 @@
 import { RepositoryPersister } from "../adapters/drivens/repository-persister";
 import { Product } from "../../repository/app/schemas/product";
-import { routes } from "./schema/routes";
+import { userRoutes } from './routes-User';
+import { productRoutes } from './routes-Product';
 import { User } from "../../repository/app/schemas/user";
 import { NonPersistedProduct, NonPersistedUser } from "../ports/drivens/for-repository-persisting";
-import { Request, Response } from "express";
+//import { Request, Response } from "express";
 
 export class Router implements RepositoryPersister {
     constructor() {}
 
     readonly allUsers = '/users';
+    private readonly productRoutes = productRoutes;
+    private readonly userRoutes = userRoutes;
 
     async getProducts(): Promise<Product[] | []> {
         try{
                 const getAll = await new RepositoryPersister().getProducts();
                 return getAll
             } catch(error){
-                console.log(`Cannot get all products when requiring ${routes.allProducts} path`, error)
+                console.log(`Cannot get all products when requiring ${this.productRoutes.all.path} path`, error)
                 return [];
             }
         
@@ -26,7 +29,7 @@ export class Router implements RepositoryPersister {
                 const getOne = await new RepositoryPersister().getProduct(id);
                 return getOne;
             } catch(error){
-            console.log(`Cannot get the product whe you require ${routes.oneProduct} path`, error)
+            console.log(`Cannot get the product whe you require ${this.productRoutes.one.path} path`, error)
             return null;
         }
     };
@@ -36,7 +39,7 @@ export class Router implements RepositoryPersister {
                 const newProduct = await new RepositoryPersister().createProduct(product);
                 return newProduct;
             } catch (error) {
-            console.log(`The product cannot be created in the route ${routes.createProduct}`, error);
+            console.log(`The product cannot be created in the route ${this.productRoutes.create.path}`, error);
             return null
         }
     };
@@ -46,7 +49,7 @@ export class Router implements RepositoryPersister {
             const deletedProduct = await new RepositoryPersister().deleteProduct(id);
             return deletedProduct;
         } catch (error) {
-            console.log(`The product could not be deleted ${routes.deleteProduct}`, error);
+            console.log(`The product could not be deleted ${this.productRoutes.delete.path}`, error);
             return null;
         }
     };
@@ -56,7 +59,7 @@ export class Router implements RepositoryPersister {
             const updateProduct = await new RepositoryPersister().updateProduct(id, product);
             return updateProduct;
         } catch (error) {
-            console.log(`Unable to update the product on the route ${routes.updateProduct}`, error);
+            console.log(`Unable to update the product on the route ${this.productRoutes.update.path}`, error);
             return null;
         }
     };
@@ -67,7 +70,7 @@ export class Router implements RepositoryPersister {
                 const getAll = await new RepositoryPersister().getUsers();
                 return getAll;
             } catch(error) {
-                console.log(`All users could not be found ${routes.allUsers} path`, error)
+                console.log(`All users could not be found ${this.userRoutes.all.path} path`, error)
                 return [];
             }
     };
@@ -77,7 +80,7 @@ export class Router implements RepositoryPersister {
                 const getOne = await new RepositoryPersister().getUser(email);
                 return getOne;
             } catch(error) {
-            console.log(`One users could not be found ${routes.oneUser}`, error)
+            console.log(`One users could not be found ${this.userRoutes.one.path}`, error)
             return null
         }
     };
@@ -87,7 +90,7 @@ export class Router implements RepositoryPersister {
             const createdUser = await new RepositoryPersister().createUser(user);
             return createdUser;
         } catch (error) {
-            console.log(`User could not be created successfully in ${routes.createUser}`, error);
+            console.log(`User could not be created successfully in ${this.userRoutes.create.path}`, error);
             return null
         }
     }
@@ -97,7 +100,7 @@ export class Router implements RepositoryPersister {
             const updatedUser = await new RepositoryPersister().updateUser(email, user);
             return updatedUser; 
         }catch (error) {
-            console.log(`Could not update user in path ${routes.updateUser}`, error);
+            console.log(`Could not update user in path ${this.userRoutes.update.path}`, error);
             return null;
         }
     };
@@ -107,13 +110,13 @@ export class Router implements RepositoryPersister {
             const deletedUser = await new RepositoryPersister().deleteUser(email);
             return deletedUser;
         }catch(error) {
-            console.log(`The user could not be deleted ${routes.deleteUser}`, error)
+            console.log(`The user could not be deleted ${this.userRoutes.delete.path}`, error)
             return null
         }
     };
-
+/*
     async callGetUsers(_req: Request, res: Response): Promise<User[] | []> {
         res.send(await this.getUsers());
         return await this.getUsers();
-    }
+    }*/
 };

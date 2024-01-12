@@ -1,12 +1,17 @@
 export const routes = {
-    allUsers: `/users`,
-    oneUser: `/users/:id`,
-    createUser:`/users/:id/:name/:surname/:email/:age`,
-    updateUser:`/users/:id/:name/:surname/:email/:age`,
-    deleteUser:`/users/:id`,
-    allProducts: `/products`,
-    oneProduct: `/products/:id`,
-    createProduct: `/products/:id`,
-    deleteProduct: `/products/:id`,
-    updateProduct: `/products/:id/:name/:series/status`,
+    users: {
+        allUsers: `/users`,
+        oneUser: `/users/:email`,
+        createUser:`/createUser`,
+        updateUser:`/updateUser/:email`,
+        deleteUser:`/deleteUser/:email`,
+    },
+
+    products: {
+        allProducts: `/products`,
+        oneProduct: `/products/:id`,
+        createProduct: `/createProduct`,
+        updateProduct: `/updateProduct/:id`,
+        deleteProduct: `/deleteProduct/:id`,
+    },
 }
