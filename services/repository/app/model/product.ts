@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import 'dotenv/config';
+import { Status } from "../schemas/product";
 @Entity({database: process.env.DB_DATABASE})
 export class ProductModel {
     @PrimaryGeneratedColumn()
@@ -12,7 +13,7 @@ export class ProductModel {
     serie: string = '';
 
     @Column({length: 25})
-    status: string = '';
+    status: Status = 'Available';
 
     @Column({length: 50})
     last_service: string = '';
