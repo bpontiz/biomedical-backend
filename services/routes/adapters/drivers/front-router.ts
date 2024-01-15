@@ -16,7 +16,7 @@ export class FrontRouter implements ForRouting {
         router.route(userRoutes.all.path).get(async(_req, res) => {
             try {
                 const allUsers = await routerInstance.getUsers();
-                res.send(allUsers)
+                res.status(200).send(allUsers)
             } catch(error) {
                 res.status(500).send('Internal Server Error');
             }
@@ -24,10 +24,10 @@ export class FrontRouter implements ForRouting {
 
         router.route(userRoutes.one.path).get(async(req, res) => {
             try {
-                const { email } = req.params; // Puedes obtener el parámetro de la URL
+                const { email } = req.params;
                 const user = await routerInstance.getUser(email);
                 if (user) {
-                    res.send(user);
+                    res.status(200).send(user);
                 } else {
                     res.status(404).send('User not found');
                 }
@@ -56,7 +56,7 @@ export class FrontRouter implements ForRouting {
                 const updatedUser = req.body;
                 const resultUser = await routerInstance.updateUser(email, updatedUser)
                     if(resultUser) {
-                        res.send(resultUser);
+                        res.status(200).send(resultUser);
                     } else {
                         res.status(404).send(`User not found`);
                     }
@@ -70,7 +70,7 @@ export class FrontRouter implements ForRouting {
                 const { email } = req.params;
                 const deletedUser = await routerInstance.deleteUser(email);
                     if (deletedUser) {
-                        res.send(deletedUser)
+                        res.status(204).send(deletedUser)
                     } else {
                         res.status(404).send(`User not found`)
                     }
@@ -83,7 +83,7 @@ export class FrontRouter implements ForRouting {
         router.route(productRoutes.all.path).get(async(_req, res) => {
             try {
                 const allProducts = await routerInstance.getProducts();
-                res.send(allProducts)
+                res.status(200).send(allProducts)
             } catch (error) {
                 res.status(500).send(`Internal Server Error`);
             }
@@ -95,7 +95,7 @@ export class FrontRouter implements ForRouting {
                 const productId = parseInt(id)
                 const product = await routerInstance.getProduct(productId)
                 if(product) {
-                    res.send(product);
+                    res.status(200).send(product);
                 } else {
                     res.status(404).send(`Product not found`);
                 }
@@ -125,7 +125,7 @@ export class FrontRouter implements ForRouting {
                 const updateProductData = req.body;
                 const updatedProduct = await routerInstance.updateProduct(productId, updateProductData);
                     if (updatedProduct){
-                        res.send(updatedProduct);
+                        res.status(200).send(updatedProduct);
                     } else {
                         res.status(404).send(`Product not found`)
                     }
@@ -140,7 +140,7 @@ export class FrontRouter implements ForRouting {
                 const productId = parseInt(id);
                 const deletedProduct = await routerInstance.deleteProduct(productId);
                     if(deletedProduct) {
-                        res.send(deletedProduct)
+                        res.status(204).send(deletedProduct)
                     } else {
                         res.status(404).send(`Product not found`)
                     }
