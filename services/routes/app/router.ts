@@ -1,4 +1,4 @@
-import { RepositoryPersister } from "../adapters/drivens/repository-persister";
+import { RepositoryPersister } from "../adapters/drivens/repository-perister";
 import { Product } from "../../repository/app/schemas/product";
 import { userRoutes } from './routes-User';
 import { productRoutes } from './routes-Product';
