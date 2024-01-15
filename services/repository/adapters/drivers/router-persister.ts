@@ -2,7 +2,7 @@ import { ForPersistingProduct, ForPersistingUser, User } from "../../ports/drive
 import { User as PersistedUser, Product as PersistedProduct, Repository } from "../../app";
 import { Product } from "../../../api/app/schemas";
 
-export class ApiPersister implements ForPersistingUser, ForPersistingProduct {
+export class RouterPersister implements ForPersistingUser, ForPersistingProduct {
     constructor() {}
 
     getUser(email: string): Promise<PersistedUser | null> {

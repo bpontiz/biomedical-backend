@@ -1,6 +1,5 @@
 import express from 'express';
 import { FrontRouter } from './services/routes/adapters/drivers/front-router';
-// import { connectionConfig } from './services/repository/app/config';
 
 const app = express();
 

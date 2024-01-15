@@ -1,4 +1,4 @@
-import { ApiPersister } from "../adapters/drivers";
+import { RouterPersister } from "../adapters/drivers";
 import { User } from "../ports/drivers/for-persisting";
 import { connectionConfig } from "./config";
 import { User as PersistedUser } from "./schemas/user";
@@ -8,25 +8,20 @@ import { Product as PersistedProduct } from "./schemas/product";
 import { Product } from "../../api/app/schemas";
 import bcrypt from 'bcrypt';
 
-export class Repository implements ApiPersister {
+export class Repository implements RouterPersister {
     constructor() {}
     async getUser(email: string): Promise<PersistedUser | null> {
         try {
             let service = await connectionConfig;
             const UserDb = await service.getRepository(UserModel).findOneBy({email: email});
-            if (UserDb)
-            {
-                return UserDb;   
-            }
-            else
-            {
-                console.log(`Could not find user with email: ${email}`);
-                return null;
-            }
-        }
-        catch (err) {
-            console.log(`Could not find user with email: ${email}\n${err}.`);
 
+            if (UserDb) {
+                return UserDb;   
+            };
+            
+            return null;
+        }
+        catch {
             return null;
         }
     };
@@ -38,9 +33,7 @@ export class Repository implements ApiPersister {
 
             return UserDb;
         }
-        catch (err) {
-            console.log(`Could not find users.`, err);
-
+        catch {
             return [];
         }
     };
@@ -48,24 +41,21 @@ export class Repository implements ApiPersister {
     async createUser(user: User): Promise<PersistedUser | null> {
         try {
             const userExistance = await this.getUser(user.email);
-            if (!userExistance) {
-                const usersPasswordHashed = {
-                    ...user,
-                    password: await this.encrypt(user.password) 
-                };
-                let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel).save(usersPasswordHashed);
 
-                return UserDb;
+            if (userExistance) {
+                return null;
             };
 
-            console.log(`User email ${user.email} already exists on user database.`);
-            
-            return null;
-        }
-        catch (err) {
-            console.log(`Could not save user ${user.email}`, err);
+            const usersPasswordHashed = {
+                ...user,
+                password: await this.encrypt(user.password) 
+            };
+            let service = await connectionConfig;
+            const UserDb = await service.getRepository(UserModel).save(usersPasswordHashed);
 
+            return UserDb;
+        }
+        catch {
             return null;
         }
     };
@@ -73,24 +63,37 @@ export class Repository implements ApiPersister {
     async updateUser(email: string, user: User): Promise<PersistedUser | null> {
         try {
             const userExistance = await this.getUser(email);
-            if (userExistance) {
-                let service = await connectionConfig;
-                const updatedUser = {
-                    id: userExistance.id,
-                    ...user
-                };
-                const UserDb = await service.getRepository(UserModel).save(updatedUser);
 
-                return UserDb;
+            if (!userExistance) {
+                return null;
             };
 
-            console.log(`User email ${email} does not exist on user database so it cannot be updated.`);
+            const checkPasswords = await bcrypt.compare(user.password, userExistance.password);
+            let service = await connectionConfig;
 
-            return null;
+            if (!checkPasswords) {
+                
+                const encryptPassword = await this.encrypt(user.password);
+
+                const updatedUser = {
+                    id: userExistance.id,
+                    ...user,
+                    password: encryptPassword,
+                };
+                const UserDb = await service.getRepository(UserModel).save(updatedUser);
+    
+                return UserDb;
+            };
+            
+            const updatedUser = {
+                id: userExistance.id,
+                ...user
+            };
+            const UserDb = await service.getRepository(UserModel).save(updatedUser);
+
+            return UserDb;
         }
-        catch (err) {
-            console.log(`Could not update user ${email}.`, err);
-
+        catch {
             return null;
         }
     };
@@ -98,20 +101,17 @@ export class Repository implements ApiPersister {
     async deleteUser(email: string): Promise<PersistedUser | null> {
         try {
             const userToBeDeleted = await this.getUser(email);
-            if (userToBeDeleted) {
-                let service = await connectionConfig;
-                const UserDb = await service.getRepository(UserModel).remove(userToBeDeleted);
 
-                return UserDb;
+            if (!userToBeDeleted) {
+                return null;
             };
 
-            console.log(`User email ${email} does not exist on user database so it cannot be deleted.`);
+            let service = await connectionConfig;
+            const UserDb = await service.getRepository(UserModel).remove(userToBeDeleted);
 
-            return null;
+            return UserDb;
         }
-        catch (err) {
-            console.log(`Could not delete user ${email}.`, err);
-
+        catch {
             return null;
         }
     };
@@ -121,11 +121,13 @@ export class Repository implements ApiPersister {
             let service = await connectionConfig;
             const productById = await service.getRepository(ProductModel).findOneBy({id: id});
 
-            return productById;
-        }
-        catch (err) {
-            console.log(`Could not find product with id: ${err}.`);
+            if (productById) {
+                return productById;
+            };
 
+            return null;
+        }
+        catch {
             return null;
         }
     };
@@ -137,9 +139,7 @@ export class Repository implements ApiPersister {
 
             return ProductDb;
         }
-        catch (err) {
-            console.log(`Could not find products.`, err);
-
+        catch {
             return [];
         }
     };
@@ -156,9 +156,7 @@ export class Repository implements ApiPersister {
 
             return ProductDb;
         }
-        catch (err) {
-            console.log(`Could not save product ${product.name}`, err);
-
+        catch {
             return null;
         }
     };
@@ -177,13 +175,10 @@ export class Repository implements ApiPersister {
 
                 return ProductDb;
             };
-            console.log(`Product with id ${id} does not exist on user database so it cannot be updated.`);
 
             return null;
         }
-        catch (err) {
-            console.log(`Could not update product with id ${id}.`, err);
-
+        catch {
             return null;
         }
     };
@@ -191,16 +186,15 @@ export class Repository implements ApiPersister {
     async deleteProduct(id: number): Promise<PersistedProduct | null> {
         try {
             const productToBeDeleted = await this.getProduct(id);
-            if (productToBeDeleted) {
-                let service = await connectionConfig;
-                const ProductDb = await service.getRepository(ProductModel).remove(productToBeDeleted);
 
-                return ProductDb;
+            if (!productToBeDeleted) {
+                return null;
             };
 
-            console.log(`Product with id ${id} does not exist on user database so it cannot be deleted.`);
+            let service = await connectionConfig;
+            const ProductDb = await service.getRepository(ProductModel).remove(productToBeDeleted);
 
-            return null;
+            return ProductDb;
         }
         catch (err) {
             console.log(`Could not delete product with ${id}.`, err);
